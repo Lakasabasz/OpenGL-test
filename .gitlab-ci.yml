@@ -14,7 +14,7 @@ build:
   # instead of calling g++ directly you can also use some build toolkit like make
   # install the necessary build tools when needed
   before_script:
-    - apt update && apt -y install cmake libglu1-mesa-dev freeglut3-dev mesa-common-dev
+    - apt update && apt -y install cmake libglu1-mesa-dev freeglut3-dev mesa-common-dev libglfw3-dev
   script:
     - mkdir build
     - cmake -S . -B build/
