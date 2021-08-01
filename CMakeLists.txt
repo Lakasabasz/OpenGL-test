@@ -10,8 +10,6 @@ find_package(glfw3 REQUIRED)
 find_package(glm CONFIG REQUIRED)
 if(WIN32)
     find_package(glew REQUIRED)
-elseif(UNIX)
-    find_package(glew NAMES glew GLEW REQUIRED)
 endif()
 
 add_executable(zabawa-opengl
