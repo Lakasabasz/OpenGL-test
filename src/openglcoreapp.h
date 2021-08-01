@@ -6,6 +6,7 @@
 #include <string>
 #include <memory>
 #include "triangle.h"
+#include "shader.h"
 
 class OpenGLCoreApp
 {
@@ -16,6 +17,7 @@ private:
     int height;
     std::string title;
     Triangle* triangle;
+    Shader* shader;
 public:
     OpenGLCoreApp();
     OpenGLCoreApp(int width, int height, std::string title, int antialiasingLevel);

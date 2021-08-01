@@ -22,24 +22,23 @@ Shader::Shader(std::string vertexShaderPath, std::string fragmentShaderPath)
     if(!vertexShaderFS.is_open()){
         throw ShaderLoadExcept(vertexShaderPath, ShaderLoadExcept::LOAD);
     }
-    {
-        std::stringstream sstr;
-        sstr << vertexShaderFS.rdbuf();
-        vertexShaderCode = sstr.str();
-        vertexShaderFS.close();
-    }
+
+    std::stringstream vsstr;
+    vsstr << vertexShaderFS.rdbuf();
+    vertexShaderCode = vsstr.str();
+    vertexShaderFS.close();
+
 
     std::string fragmentShaderCode;
-    std::ifstream fragmentShaderFS(vertexShaderPath, std::ios::in);
+    std::ifstream fragmentShaderFS(fragmentShaderPath, std::ios::in);
     if(!fragmentShaderFS.is_open()){
         throw ShaderLoadExcept(fragmentShaderPath, ShaderLoadExcept::LOAD);
     }
-    {
-        std::stringstream sstr;
-        sstr << fragmentShaderFS.rdbuf();
-        fragmentShaderCode = sstr.str();
-        fragmentShaderFS.close();
-    }
+
+    std::stringstream fsstr;
+    fsstr << fragmentShaderFS.rdbuf();
+    fragmentShaderCode = fsstr.str();
+    fragmentShaderFS.close();
 
     GLint result = GL_FALSE;
     int infoLogLength;
@@ -71,27 +70,27 @@ Shader::Shader(std::string vertexShaderPath, std::string fragmentShaderPath)
         std::cout << std::string(fragmentShaderErrorMessage.begin(), fragmentShaderErrorMessage.end()) << std::endl;
     }
 
-        // Link the program
-        printf("Linking program\n");
-        GLuint ProgramID = glCreateProgram();
-        glAttachShader(ProgramID, vertexShaderID);
-        glAttachShader(ProgramID, fragmentShaderID);
-        glLinkProgram(ProgramID);
+    // Link the program
+    std::cout << "[INFO] Linking program" << std::endl;
+    GLuint programID = glCreateProgram();
+    glAttachShader(programID, vertexShaderID);
+    glAttachShader(programID, fragmentShaderID);
+    glLinkProgram(programID);
 
-        // Check the program
-        glGetProgramiv(ProgramID, GL_LINK_STATUS, &result);
-        glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &infoLogLength);
-        if(infoLogLength > 0){
-            std::vector<char> ProgramErrorMessage(infoLogLength+1);
-            glGetProgramInfoLog(ProgramID, infoLogLength, NULL, &ProgramErrorMessage[0]);
-            std::cout << std::string(ProgramErrorMessage.begin(), ProgramErrorMessage.end()) << std::endl;
-        }
+    // Check the program
+    glGetProgramiv(programID, GL_LINK_STATUS, &result);
+    glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
+    if(infoLogLength > 0){
+        std::vector<char> programErrorMessage(infoLogLength+1);
+        glGetProgramInfoLog(programID, infoLogLength, NULL, &programErrorMessage[0]);
+        std::cout << std::string(programErrorMessage.begin(), programErrorMessage.end()) << std::endl;
+    }
 
-        glDetachShader(ProgramID, vertexShaderID);
-        glDetachShader(ProgramID, fragmentShaderID);
+    glDetachShader(programID, vertexShaderID);
+    glDetachShader(programID, fragmentShaderID);
 
-        glDeleteShader(vertexShaderID);
-        glDeleteShader(fragmentShaderID);
+    glDeleteShader(vertexShaderID);
+    glDeleteShader(fragmentShaderID);
 
-        shaderId = ProgramID;
+    shaderId = programID;
 }

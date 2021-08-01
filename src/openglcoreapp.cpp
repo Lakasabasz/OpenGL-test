@@ -13,6 +13,7 @@ OpenGLCoreApp::OpenGLCoreApp()
 OpenGLCoreApp::~OpenGLCoreApp()
 {
     delete triangle;
+    delete shader;
     glfwTerminate();
 }
 
@@ -47,11 +48,14 @@ void OpenGLCoreApp::init()
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
     glClearColor(.0f, .2f, .5f, .0f);
     triangle = new Triangle();
+
+    shader = new Shader("shaders/simpleShader.vert", "shaders/simpleShader.frag");
 }
 
 void OpenGLCoreApp::mainLoop(){
     do{
-        glClear( GL_COLOR_BUFFER_BIT );
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glUseProgram(shader->getShaderId());
 
         // Draw nothing, see you in tutorial 2 !
         glEnableVertexAttribArray(0);

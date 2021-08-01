@@ -17,7 +17,8 @@ add_executable(zabawa-opengl
     src/exceptions/shaderloadexcept.h src/exceptions/shaderloadexcept.cpp
     src/openglcoreapp.h src/openglcoreapp.cpp
     src/triangle.h src/triangle.cpp
-    src/shader.h src/shader.cpp)
+    src/shader.h src/shader.cpp
+    shaders/simpleShader.vert shaders/simpleShader.frag)
 target_link_libraries(${PROJECT_NAME} glfw)
 target_link_libraries(${PROJECT_NAME} glm::glm)
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARY})
