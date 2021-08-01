@@ -17,6 +17,8 @@ build:
     - apt update && apt -y install cmake
   script:
     - mkdir build -S . -B build/
+    - cmake -S . -B build/
+    - cmake --build build/ 
   artifacts:
     paths:
       - build
