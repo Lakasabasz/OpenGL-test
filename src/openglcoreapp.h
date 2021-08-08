@@ -18,6 +18,8 @@ private:
     std::string title;
     Triangle* triangle;
     Shader* shader;
+    uint32_t frame;
+    GLuint VAO;
 public:
     OpenGLCoreApp();
     OpenGLCoreApp(int width, int height, std::string title, int antialiasingLevel);

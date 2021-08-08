@@ -8,6 +8,7 @@ OpenGLCoreApp::OpenGLCoreApp()
     width = 800;
     height = 600;
     title = "OpenGL core app";
+    frame = 0;
 }
 
 OpenGLCoreApp::~OpenGLCoreApp()
@@ -47,7 +48,13 @@ void OpenGLCoreApp::init()
 
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
     glClearColor(.0f, .2f, .5f, .0f);
-    triangle = new Triangle();
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+    glm::vec3 a(-0.5, -0.5, 0);
+    glm::vec3 b(0.5, -0.5, 0);
+    glm::vec3 c(0, 0.5, 0);
+    triangle = new Triangle(glm::mat3(a, b, c));
+    //triangle = new Triangle();
 
     shader = new Shader("shaders/simpleShader.vert", "shaders/simpleShader.frag");
 }
@@ -56,8 +63,9 @@ void OpenGLCoreApp::mainLoop(){
     do{
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUseProgram(shader->getShaderId());
+        auto faza = glGetUniformLocation(shader->getShaderId(), "faza");
+        glUniform1f(faza, frame * 0.1);
 
-        // Draw nothing, see you in tutorial 2 !
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, triangle->getVertexBuffer());
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -66,6 +74,7 @@ void OpenGLCoreApp::mainLoop(){
 
         // Swap buffers
         glfwSwapBuffers(window);
+        frame++;
         glfwPollEvents();
     } while(glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 }
