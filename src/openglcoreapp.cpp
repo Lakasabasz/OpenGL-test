@@ -48,8 +48,6 @@ void OpenGLCoreApp::init()
 
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
     glClearColor(.0f, .2f, .5f, .0f);
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
     glm::vec3 a(-0.5, -0.5, 0);
     glm::vec3 b(0.5, -0.5, 0);
     glm::vec3 c(0, 0.5, 0);
@@ -66,11 +64,7 @@ void OpenGLCoreApp::mainLoop(){
         auto faza = glGetUniformLocation(shader->getShaderId(), "faza");
         glUniform1f(faza, frame * 0.1);
 
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, triangle->getVertexBuffer());
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDisableVertexAttribArray(0);
+        triangle->draw();
 
         // Swap buffers
         glfwSwapBuffers(window);
