@@ -6,9 +6,11 @@
 #include <string>
 #include <memory>
 #include "triangle.h"
+#include "trapeze.h"
 #include "shader.h"
+#include "openglcoreapp.h"
 
-class OpenGLCoreApp
+class OpenGLCoreApp : public OpenGLObject
 {
 private:
     GLFWwindow* window;
@@ -17,6 +19,7 @@ private:
     int height;
     std::string title;
     Triangle* triangle;
+    Trapeze* trapez;
     Shader* shader;
     uint32_t frame;
     GLuint VAO;

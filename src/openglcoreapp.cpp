@@ -1,5 +1,20 @@
 #include "openglcoreapp.h"
 #include <stdexcept>
+#include <iostream>
+
+void GLAPIENTRY
+MessageCallback( GLenum source,
+                 GLenum type,
+                 GLuint id,
+                 GLenum severity,
+                 GLsizei length,
+                 const GLchar* message,
+                 const void* userParam )
+{
+  fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+           ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+            type, severity, message );
+}
 
 OpenGLCoreApp::OpenGLCoreApp()
     : triangle()
@@ -14,6 +29,7 @@ OpenGLCoreApp::OpenGLCoreApp()
 OpenGLCoreApp::~OpenGLCoreApp()
 {
     delete triangle;
+    delete trapez;
     delete shader;
     glfwTerminate();
 }
@@ -47,11 +63,11 @@ void OpenGLCoreApp::init()
     }
 
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-    glClearColor(.0f, .2f, .5f, .0f);
-    glm::vec3 a(-0.5, -0.5, 0);
-    glm::vec3 b(0.5, -0.5, 0);
-    glm::vec3 c(0, 0.5, 0);
-    triangle = new Triangle(glm::mat3(a, b, c));
+    glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(MessageCallback, 0);
+    glClearColor(.0f, .0f, .0f, .0f);
+    trapez = new Trapeze();
+    triangle = new Triangle(std::vector<Vertex>{Vertex(-0.5, -0.75, 0), Vertex(0.5, -0.75, 0), Vertex(0, 0.25, 0)});
     //triangle = new Triangle();
 
     shader = new Shader("shaders/simpleShader.vert", "shaders/simpleShader.frag");
@@ -59,11 +75,13 @@ void OpenGLCoreApp::init()
 
 void OpenGLCoreApp::mainLoop(){
     do{
+        displayErrors("Begin main loop");
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUseProgram(shader->getShaderId());
         auto faza = glGetUniformLocation(shader->getShaderId(), "faza");
         glUniform1f(faza, frame * 0.1);
 
+        //trapez->draw();
         triangle->draw();
 
         // Swap buffers

@@ -20,7 +20,9 @@ add_executable(zabawa-opengl
     src/shader.h src/shader.cpp
     src/trapeze.h src/trapeze.cpp
     shaders/simpleShader.vert shaders/simpleShader.frag
-    src/vertex.h)
+    src/vertex.h
+    src/aktor.h src/aktor.cpp
+    src/openglobject.h src/openglobject.cpp)
 target_link_libraries(${PROJECT_NAME} glfw)
 target_link_libraries(${PROJECT_NAME} glm::glm)
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARY})

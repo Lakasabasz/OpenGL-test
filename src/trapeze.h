@@ -4,17 +4,22 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include "vertex.h"
+#include "aktor.h"
+#include <vector>
 
-
-class Trapeze
+class Trapeze: public Aktor
 {
 private:
     unsigned int vao;
-    unsigned int vbo;
+    unsigned int vbo[2];
 
-    Vertex default_vertex[4];
+    std::vector<Vertex> vertexArray;
+    unsigned int index[4];
 public:
     Trapeze();
+    virtual ~Trapeze();
+    void loadData();
+    void draw();
 };
 
 #endif // TRAPEZE_H

@@ -1,28 +1,21 @@
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
 
-#include <GL/glew.h>
+#include "aktor.h"
+#include "vertex.h"
 #include <glm/glm.hpp>
+#include <vector>
 
-class Triangle
+class Triangle: public Aktor
 {
 private:
-    GLuint VAO;
-    GLuint VBO;
-    const GLfloat g_vertex_buffer_data[9] = {
-            -1.0f, -1.0f, 0.0f,
-            1.0f, -1.0f, 0.0f,
-            0.0f,  1.0f, 0.0f
-        };
-    const float deafult_colors[12] = {
-        0, 1, 1, 1,
-        0, 1, 1, 1,
-        0, 1, 1, 1
-    };
+    Vertex vertexArray[3];
+    GLuint indexes[3];
 public:
     Triangle();
-    Triangle(glm::mat3 coords);
-    GLuint getVBO();
+    Triangle(std::vector<Vertex> coords);
+    virtual ~Triangle();
+    void loadData();
     void draw();
 };
 

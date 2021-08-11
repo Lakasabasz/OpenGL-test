@@ -18,6 +18,7 @@ struct Vertex{
     static const int sizeOfColor = sizeof(float)*colorCount;
     static const int size = sizeOfColor + sizeOfCoords;
 
+    Vertex(): x(0), y(0), z(0), r(0.5), g(1), b(0), a(1){}
     Vertex(float x, float y, float z) : x(x), y(y), z(z), r(0.5), g(1), b(0), a(1){}
     Vertex(float x, float y, float z, float r, float g, float b, float a = 1.0) : x(x), y(y), z(z), r(r), g(g), b(b), a(a){}
 };
