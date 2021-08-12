@@ -5,12 +5,6 @@
 #include <string>
 #include <iostream>
 
-class OpenGLObject
-{
-public:
-    static std::string lastCatchPoint;
-    OpenGLObject();
-    virtual void displayErrors(std::string catchPoint);
-};
+class OpenGLObject{};
 
 #endif // OPENGLOBJECT_H

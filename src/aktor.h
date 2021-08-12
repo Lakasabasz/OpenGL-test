@@ -2,19 +2,15 @@
 #define AKTOR_H
 
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 #include "openglobject.h"
+#include "shader.h"
 
-class Aktor : public OpenGLObject
+class Aktor : public virtual OpenGLObject
 {
-protected:
-    GLuint vao;
-    GLuint vbo[2];
 public:
-    Aktor();
-    void initBuffers();
-    virtual void loadData() = 0;
-    virtual void draw() = 0;
-
+    virtual void draw(glm::mat4 camMatrix, glm::mat4 projectionMatrix) = 0;
+    virtual ~Aktor();
 };
 
 #endif // AKTOR_H

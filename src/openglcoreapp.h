@@ -5,10 +5,13 @@
 #include <GLFW/glfw3.h>
 #include <string>
 #include <memory>
+#include <glm/glm.hpp>
 #include "triangle.h"
 #include "trapeze.h"
 #include "shader.h"
 #include "openglcoreapp.h"
+#include <vector>
+#include "aktor.h"
 
 class OpenGLCoreApp : public OpenGLObject
 {
@@ -18,11 +21,11 @@ private:
     int width;
     int height;
     std::string title;
-    Triangle* triangle;
-    Trapeze* trapez;
+    std::vector<Aktor*> actors;
     Shader* shader;
     uint32_t frame;
-    GLuint VAO;
+    glm::mat4 projectionMatrix;
+    glm::mat4 cameraMatrix;
 public:
     OpenGLCoreApp();
     OpenGLCoreApp(int width, int height, std::string title, int antialiasingLevel);

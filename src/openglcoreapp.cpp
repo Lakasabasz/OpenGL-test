@@ -1,35 +1,75 @@
 #include "openglcoreapp.h"
 #include <stdexcept>
 #include <iostream>
+#include <glm/gtc/matrix_transform.hpp>
 
-void GLAPIENTRY
-MessageCallback( GLenum source,
-                 GLenum type,
-                 GLuint id,
-                 GLenum severity,
-                 GLsizei length,
-                 const GLchar* message,
-                 const void* userParam )
+void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint, GLenum severity, GLsizei, const GLchar* message, const void*)
 {
-  fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-           ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-            type, severity, message );
+    std::cout << "OpenGL CALLBACK: ";
+    switch(type){
+    case GL_DEBUG_TYPE_ERROR:
+        std::cout << "[ERROR ";
+        break;
+    case GL_DEBUG_TYPE_PERFORMANCE:
+        std::cout << "[PERFORMANCE ";
+        break;
+    case GL_DEBUG_TYPE_OTHER:
+        std::cout << "[OTHER ";
+        break;
+    default:
+        std::cout << "[GL " << type << " ";
+        break;
+    }
+    switch(severity){
+    case GL_DEBUG_SEVERITY_HIGH:
+        std::cout << "HIGH] ";
+        break;
+    case GL_DEBUG_SEVERITY_MEDIUM:
+        std::cout << "MEDIUM] ";
+        break;
+    case GL_DEBUG_SEVERITY_LOW:
+        std::cout << "LOW] ";
+        break;
+    case GL_DEBUG_SEVERITY_NOTIFICATION:
+        std::cout << "INFO] ";
+        break;
+    default:
+        std::cout << severity << "] ";
+        break;
+    }
+    switch(source){
+    case GL_DEBUG_SOURCE_API:
+        std::cout << "<API> ";
+        break;
+    case GL_DEBUG_SOURCE_APPLICATION:
+        std::cout << "<APPLICATION> ";
+        break;
+    case GL_DEBUG_SOURCE_SHADER_COMPILER:
+        std::cout << "<SHADER COMPILER> ";
+        break;
+    default:
+        std::cout << "<" << source << "> ";
+        break;
+    }
+
+    std::cout << message << "\n";
 }
 
 OpenGLCoreApp::OpenGLCoreApp()
-    : triangle()
 {
     antialiasing = 4;
     width = 800;
     height = 600;
     title = "OpenGL core app";
     frame = 0;
+    cameraMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0, 0, -3.0));
+    projectionMatrix = glm::frustum(-1.0, 1.0, (height * -1.0)/width, (height * 1.0)/width, 1.0, 10.0);
 }
 
 OpenGLCoreApp::~OpenGLCoreApp()
 {
-    delete triangle;
-    delete trapez;
+    for(auto actor : actors)
+        delete actor;
     delete shader;
     glfwTerminate();
 }
@@ -63,26 +103,27 @@ void OpenGLCoreApp::init()
     }
 
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(MessageCallback, 0);
-    glClearColor(.0f, .0f, .0f, .0f);
-    trapez = new Trapeze();
-    triangle = new Triangle(std::vector<Vertex>{Vertex(-0.5, -0.75, 0), Vertex(0.5, -0.75, 0), Vertex(0, 0.25, 0)});
-    //triangle = new Triangle();
 
     shader = new Shader("shaders/simpleShader.vert", "shaders/simpleShader.frag");
+
+    glClearColor(.0f, .0f, .0f, .0f);
+    actors.push_back(new Trapeze(shader));
+    actors.push_back(new Triangle(std::vector<Vertex>{Vertex(-0.5, -0.75, 0), Vertex(0.5, -0.75, 0), Vertex(0, 0.25, 0)}));
 }
 
 void OpenGLCoreApp::mainLoop(){
     do{
-        displayErrors("Begin main loop");
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUseProgram(shader->getShaderId());
+
         auto faza = glGetUniformLocation(shader->getShaderId(), "faza");
         glUniform1f(faza, frame * 0.1);
 
-        //trapez->draw();
-        triangle->draw();
+        for(const auto actor : actors)
+            actor->draw(cameraMatrix, projectionMatrix);
 
         // Swap buffers
         glfwSwapBuffers(window);
