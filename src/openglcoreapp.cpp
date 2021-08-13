@@ -63,7 +63,7 @@ OpenGLCoreApp::OpenGLCoreApp()
     title = "OpenGL core app";
     frame = 0;
     cameraMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0, 0, -3.0));
-    projectionMatrix = glm::frustum(-1.0, 1.0, (height * -1.0)/width, (height * 1.0)/width, 1.0, 10.0);
+    projectionMatrix = glm::perspective(M_PI/2.0, width*1.0/height, 1.0, 10.0);
 }
 
 OpenGLCoreApp::~OpenGLCoreApp()
@@ -111,7 +111,10 @@ void OpenGLCoreApp::init()
 
     glClearColor(.0f, .0f, .0f, .0f);
     actors.push_back(new Trapeze(shader));
-    actors.push_back(new Triangle(std::vector<Vertex>{Vertex(-0.5, -0.75, 0), Vertex(0.5, -0.75, 0), Vertex(0, 0.25, 0)}));
+
+    Aktor* triangle = new Triangle(shader, std::vector<Vertex>{Vertex(-0.5, -0.75, 0), Vertex(0.5, -0.75, 0), Vertex(0, 0.25, 0)});
+    triangle->setPosition(glm::vec3(0, 0, 0));
+    actors.push_back(triangle);
 }
 
 void OpenGLCoreApp::mainLoop(){
@@ -124,6 +127,9 @@ void OpenGLCoreApp::mainLoop(){
 
         for(const auto actor : actors)
             actor->draw(cameraMatrix, projectionMatrix);
+        actors[1]->move(glm::vec3(-0.01, 0, 0));
+        actors[1]->rotate(1, glm::vec3(1, 1, 1));
+        actors[1]->move(glm::vec3(0.01, 0, 0));
 
         // Swap buffers
         glfwSwapBuffers(window);

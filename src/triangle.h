@@ -14,11 +14,16 @@ private:
     GLuint vao;
     GLuint vbo[2];
     void loadData();
+    glm::mat4 macierzSceny;
+    Shader* shader;
 public:
-    Triangle();
-    Triangle(std::vector<Vertex> coords);
+    Triangle(Shader* shader);
+    Triangle(Shader* shader, std::vector<Vertex> coords);
     virtual ~Triangle();
-    void draw(glm::mat4 camMatrix, glm::mat4 projectionMatrix);
+    virtual void draw(glm::mat4 camMatrix, glm::mat4 projectionMatrix) override;
+    virtual void move(glm::vec3 direction) override;
+    virtual void setPosition(glm::vec3 position) override;
+    virtual void rotate(float degrees, glm::vec3 vectorAngle, bool radians = false);
 };
 
 #endif // TRIANGLE_H
